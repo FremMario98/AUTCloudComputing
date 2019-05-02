@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>API STUDENTS</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style type="text/css" rel="stylesheet">
+      .inputdiv{
+        margin:20px;
+      }
+    </style>
+
+</head>
+<body>
+
+
+    <div class="inputdiv col-md-5">
+        <label>Name</label>
+      <input type="text" class="form-control" id="name"/>
+    </div>
+
+    <div class="inputdiv col-md-5">
+      <label>Last Name</label>
+      <input type="text" class="form-control" id="lname"/>
+    </div>
+
+    <div class="inputdiv col-md-5">
+        <label>Selection</label>
+      <select class="custom-select" name="" id="select">
+        <option value="Room 204">Room 204</option>
+        <option value="Room 204">Room 204</option>
+      </select>
+    </div>
+
+    <div style="margin:30px;">
+      <button class="btn btn-primary" id="submitdivs">Submit</button>
+    </div>
+
+
+    <div id="studentstable"></div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="jquery.js"></script>
+    <script>
+
+    callallstudents();
+
+    function callallstudents(){
+        $.ajax({
+            type: "GET",
+            url: 'api.php',
+            success: function(response)
+            {
+                student=JSON.parse(response);
+                console.log(student);
+                CreateStudentHTML(student);
+
+            }
+       });
+     }
+
+       function DrawSrudents(students){
+
+       }
+       function CreateStudentHTML(students){
+         var html="";
+         html+="<table border='1px solid black'><head><tr><td>ID</td><td>Name</td><td>LastName</td><td>Class</td></tr></head><body>";
+
+
+         for (var i=0;i<students.length;i++){
+           html+="<tr>";
+           html+="<td>"+students[i].id+"</td>";
+           html+="<td>"+students[i].name+"</td>";
+           html+="<td>"+students[i].lname+"</td>";
+           html+="<td>"+students[i].classroom+"</td>";
+         }
+
+         html+="</body></table>";
+         $("#studentstable").html(html);
+
+       }
+
+
+
+    $("#submitdivs").on("click",function(){
+
+      var name=$("#name").val();
+      var lastname=$("#lname").val();
+      var selected=$("#select").val();
+
+      $.ajax({
+          type: "GET",
+          url: 'insert.php',
+          data:{name:name,lastname:lastname,selected:selected},
+          success: function(response)
+          {
+            callallstudents();
+          }
+     });
+
+    });
+    </script>
+
+</body>
+</html>
